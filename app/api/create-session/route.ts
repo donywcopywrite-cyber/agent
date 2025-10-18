@@ -1,6 +1,8 @@
 import { WORKFLOW_ID } from "@/lib/config";
 
-export const runtime = "edge";
+// Use the Node.js runtime to avoid local/dev 502s and
+// ensure full compatibility with environment variables and fetch.
+export const runtime = "nodejs";
 
 interface CreateSessionRequestBody {
   workflow?: { id?: string | null } | null;
