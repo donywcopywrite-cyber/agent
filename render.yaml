@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: chatkit-starter
+    env: node
+    plan: free
+    runtime: node
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_CHATKIT_WORKFLOW_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CHATKIT_API_BASE
+        sync: false
+    routes:
+      - type: rewrite
+        source: /api/(.*)
+        destination: /api/$1
