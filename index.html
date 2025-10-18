@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Agent UI</title>
+    <style>
+      body { margin:0; background:#0f172a; color:#e5e7eb; font-family:Inter,system-ui,sans-serif; }
+      .wrap { max-width:800px; margin:0 auto; padding:24px; }
+      .card { background:linear-gradient(135deg,#0f172a,#1e293b); border-radius:16px; padding:16px 18px; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+      input,textarea,button { width:100%; margin-top:12px; border-radius:10px; border:1px solid #334155; padding:10px 12px; background:#0b1220; color:#e5e7eb; }
+      button { background:#1e3a8a; cursor:pointer; }
+      pre { white-space:pre-wrap; background:#0b1220; padding:12px; border-radius:10px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Agent UI</h1>
+      <div class="card">
+        <label for="brief">Your prompt / brief</label>
+        <textarea id="brief" rows="5" placeholder="e.g., 3 trend-backed ideas for Montreal buyers (FR), 20–30s."></textarea>
+        <button id="runBtn">Send to Agent</button>
+        <pre id="out"></pre>
+      </div>
+    </div>
+
+    <script>
+      const btn = document.getElementById("runBtn");
+      const out = document.getElementById("out");
+      btn.onclick = async () => {
+        const input = document.getElementById("brief").value || "Hello agent!";
+        out.textContent = "Running...";
+        try {
+          const resp = await fetch("/api/run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input })
+          });
+          const data = await resp.json();
+          out.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+          out.textContent = e.message;
+        }
+      };
+    </script>
+  </body>
+</html>
